@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import { formatEther, parseEther } from "ethers/lib/utils";
 // Define a custom type for MetaMask provider
 interface Eip1193Provider {
   request: (args: { method: string; params?: any[] }) => Promise<any>;
@@ -270,12 +269,12 @@ export default function MCPMarketplace() {
           category: mcp.category,
           usageCount: mcp.usageCount.toNumber(),
           rating: mcp.rating,
-          price: parseFloat(formatEther(mcp.price)),
+          price: parseFloat(ethers.utils.formatEther(mcp.price)),
           owner: mcp.owner,
           approved: mcp.approved,
           active: mcp.active,
           apiEndpoints: mcp.apiEndpoints || [],
-          revenue: parseFloat(formatEther(mcp.revenue)),
+          revenue: parseFloat(ethers.utils.formatEther(mcp.revenue)),
           codeExamples: mcp.codeExamples,
         }));
 
@@ -317,8 +316,8 @@ export default function MCPMarketplace() {
           title: proposal.title,
           description: proposal.description,
           proposer: proposal.proposer,
-          forVotes: parseFloat(formatEther(proposal.forVotes)),
-          againstVotes: parseFloat(formatEther(proposal.againstVotes)),
+          forVotes: parseFloat(ethers.utils.formatEther(proposal.forVotes)),
+          againstVotes: parseFloat(ethers.utils.formatEther(proposal.againstVotes)),
           executed: proposal.executed,
           endBlock: proposal.endBlock.toNumber(),
         }));
@@ -353,7 +352,7 @@ export default function MCPMarketplace() {
       setLoading(true);
 
       // Create proposal for MCP approval
-      const priceInWei = parseEther(price);
+      const priceInWei = ethers.utils.parseEther(price);
       const tx = await sagaDao.propose(
         [mcpPool.address], // targets
         [0], // values
@@ -460,7 +459,7 @@ export default function MCPMarketplace() {
       setSelectedMcp(mcp);
 
       // Process payment
-      const priceInWei = parseEther(mcp.price.toString());
+      const priceInWei = ethers.utils.parseEther(mcp.price.toString());
       const tx = await billingSystem.processPayment(mcp.owner, priceInWei);
       await tx.wait();
 
@@ -486,7 +485,7 @@ export default function MCPMarketplace() {
       // Update token balance
       if (sagaToken && account) {
         const newBalance = await sagaToken.balanceOf(account);
-        setTokenBalance(formatEther(newBalance));
+        setTokenBalance(ethers.utils.formatEther(newBalance));
       }
 
       toast({
@@ -540,7 +539,7 @@ export default function MCPMarketplace() {
 
     try {
       const balance = await billingSystem.getProviderBalance(account);
-      return formatEther(balance);
+      return ethers.utils.formatEther(balance);
     } catch (error) {
       console.error("Error getting provider balance:", error);
       return "0";
@@ -674,7 +673,7 @@ export default function MCPMarketplace() {
       // Update token balance
       if (sagaToken && account) {
         const newBalance = await sagaToken.balanceOf(account);
-        setTokenBalance(formatEther(newBalance));
+        setTokenBalance(ethers.utils.formatEther(newBalance));
       }
     } else {
       setTokenBalance("0");

@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import { formatEther, parseEther } from "ethers/lib/utils";
 // Define a custom type for MetaMask provider
 interface Eip1193Provider {
   request: (args: { method: string; params?: any[] }) => Promise<any>;
@@ -121,7 +120,7 @@ export default function DaoGovernance() {
     if (!account || !window.ethereum) return;
 
     try {
-      const provider = new ethers.BrowserProvider(window.ethereum);
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = await provider.getSigner();
       const mcpPoolContract = new ethers.Contract(MCP_POOL_ADDRESS, MCPPoolABI.abi, signer);
 
@@ -151,10 +150,13 @@ export default function DaoGovernance() {
         const mcpData = await poolToUse.getMCP(0);
         console.log("MCP Data:", mcpData);
 
+        // Initialize the formatted MCPs array
+        let formattedMcps: MCP[] = [];
+        
         // Check if mcpData is an array
         if (Array.isArray(mcpData)) {
           // Handle array of MCPs
-          const formattedMcps: MCP[] = mcpData.map((mcp: any) => ({
+          formattedMcps = mcpData.map((mcp: any) => ({
             id: mcp.id,
             title: mcp.title,
             description: mcp.description,
@@ -163,17 +165,17 @@ export default function DaoGovernance() {
             category: mcp.category,
             usageCount: mcp.usageCount.toNumber(),
             rating: mcp.rating,
-            price: parseFloat(formatEther(mcp.price)),
+            price: parseFloat(ethers.utils.formatEther(mcp.price)),
             owner: mcp.owner,
             approved: mcp.approved,
             active: mcp.active,
             apiEndpoints: mcp.apiEndpoints || [],
-            revenue: parseFloat(formatEther(mcp.revenue)),
+            revenue: parseFloat(ethers.utils.formatEther(mcp.revenue)),
             codeExamples: mcp.codeExamples,
           }));
         } else {
           // Handle single MCP object
-          const formattedMcps: MCP[] = [
+          formattedMcps = [
             {
               id: mcpData.id || "0",
               title: mcpData.name || "Untitled MCP",
@@ -259,8 +261,8 @@ export default function DaoGovernance() {
           proposer: proposal.proposer,
           startTime: proposal.startTime.toNumber(),
           endTime: proposal.endTime.toNumber(),
-          forVotes: parseFloat(formatEther(proposal.forVotes)),
-          againstVotes: parseFloat(formatEther(proposal.againstVotes)),
+          forVotes: parseFloat(ethers.utils.formatEther(proposal.forVotes)),
+          againstVotes: parseFloat(ethers.utils.formatEther(proposal.againstVotes)),
           executed: proposal.executed,
           status: proposal.executed
             ? "executed"

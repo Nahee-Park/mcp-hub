@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import { formatEther, parseEther } from "ethers/lib/utils";
 // Define a custom type for MetaMask provider
 interface Eip1193Provider {
   request: (args: { method: string; params?: any[] }) => Promise<any>;
@@ -106,41 +105,7 @@ export default function Home() {
   const { walletState, connectWallet } = useWallet();
   const { account, balance, mcpPool, sagaToken, billingSystem } = walletState;
 
-  // Load MCPs from Firestore
-  const loadMcps = async () => {
-    try {
-      setLoading(true);
-
-      // Fetch MCPs from Firestore
-      const response = await fetch("/api/mcp-list");
-      const result = await response.json();
-      console.log("result", result);
-
-      if (result.mcps) {
-        // Filter only approved and active MCPs
-        const approvedMcps = result.mcps.filter((mcp: MCP) => mcp.approved && mcp.active);
-        setMcps(approvedMcps);
-      } else {
-        console.error("No MCPs found in Firestore");
-        setMcps([]);
-        toast({
-          title: "Warning",
-          description: "Could not load MCPs from Firestore.",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      console.error("Error loading MCPs from Firestore:", error);
-      setMcps([]);
-      toast({
-        title: "Error",
-        description: "Failed to load MCPs. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Load MCPs function declaration (implemented below)
 
   // Handle responsive sidebar
   useEffect(() => {
@@ -233,12 +198,12 @@ export default function Home() {
         category: mcp.category,
         usageCount: mcp.usageCount.toNumber(),
         rating: mcp.rating,
-        price: parseFloat(formatEther(mcp.price)),
+        price: parseFloat(ethers.utils.formatEther(mcp.price)),
         owner: mcp.owner,
         approved: mcp.approved,
         active: mcp.active,
         apiEndpoints: mcp.apiEndpoints || [],
-        revenue: parseFloat(formatEther(mcp.revenue)),
+        revenue: parseFloat(ethers.utils.formatEther(mcp.revenue)),
         codeExamples: mcp.codeExamples,
       }));
 
@@ -303,7 +268,7 @@ export default function Home() {
       setSelectedMcp(mcp);
 
       // Process payment
-      const priceInWei = parseEther(mcp.price.toString());
+      const priceInWei = ethers.utils.parseEther(mcp.price.toString());
       const tx = await billingSystem.processPayment(mcp.owner, priceInWei);
       await tx.wait();
 
@@ -329,7 +294,7 @@ export default function Home() {
       // Update token balance
       if (sagaToken && account) {
         const newBalance = await sagaToken.balanceOf(account);
-        setTokenBalance(formatEther(newBalance));
+        setTokenBalance(ethers.utils.formatEther(newBalance));
       }
 
       toast({

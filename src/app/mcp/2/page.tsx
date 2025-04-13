@@ -399,7 +399,7 @@ export default function UpstageWeb3McpPage() {
                         <TabsTrigger value="shell">Shell</TabsTrigger>
                       </TabsList>
                       <TabsContent value="typescript">
-                        <CodeBlock language="typescript" code={mcp.codeExamples.typescript} />
+                        <CodeBlock language="typescript" code={mcp.codeExamples?.typescript || ''} />
                         <div className="mt-6 space-y-4">
                           <h3 className="text-lg font-medium">Additional Examples</h3>
                           <div>
@@ -448,7 +448,7 @@ console.log(\`Output verification result: \${isValid ? 'Valid' : 'Invalid'}\`);`
                         </div>
                       </TabsContent>
                       <TabsContent value="python">
-                        <CodeBlock language="python" code={mcp.codeExamples.python} />
+                        <CodeBlock language="python" code={mcp.codeExamples?.python || ''} />
                         <div className="mt-6 space-y-4">
                           <h3 className="text-lg font-medium">Additional Examples</h3>
                           <div>
@@ -493,7 +493,7 @@ print(f"Output verification result: {'Valid' if is_valid else 'Invalid'}")`} />
                         </div>
                       </TabsContent>
                       <TabsContent value="shell">
-                        <CodeBlock language="shell" code={mcp.codeExamples.shell} />
+                        <CodeBlock language="shell" code={mcp.codeExamples?.shell || ''} />
                         <div className="mt-6 space-y-4">
                           <h3 className="text-lg font-medium">Additional Examples</h3>
                           <div>

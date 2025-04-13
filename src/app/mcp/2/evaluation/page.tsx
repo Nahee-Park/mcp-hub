@@ -754,23 +754,23 @@ export default function UpstageWeb3EvaluationPage() {
                                         <div>
                                           <div className="text-xs flex justify-between">
                                             <span>Proof Validity</span>
-                                            <span>{(results[testCase.id].verificationMetrics.proofValidity * 100).toFixed(1)}%</span>
+                                            <span>{(results[testCase.id]?.verificationMetrics?.proofValidity || 0) * 100}%</span>
                                           </div>
-                                          <Progress value={results[testCase.id].verificationMetrics.proofValidity * 100} className="h-1" />
+                                          <Progress value={(results[testCase.id]?.verificationMetrics?.proofValidity || 0) * 100} className="h-1" />
                                         </div>
                                         <div>
                                           <div className="text-xs flex justify-between">
                                             <span>Execution Cost (lower is better)</span>
-                                            <span>{((1-results[testCase.id].verificationMetrics.executionCost) * 100).toFixed(1)}%</span>
+                                            <span>{((1-(results[testCase.id]?.verificationMetrics?.executionCost || 0)) * 100).toFixed(1)}%</span>
                                           </div>
-                                          <Progress value={(1-results[testCase.id].verificationMetrics.executionCost) * 100} className="h-1" />
+                                          <Progress value={(1-(results[testCase.id]?.verificationMetrics?.executionCost || 0)) * 100} className="h-1" />
                                         </div>
                                         <div>
                                           <div className="text-xs flex justify-between">
                                             <span>Verification Speed</span>
-                                            <span>{(results[testCase.id].verificationMetrics.verificationSpeed * 100).toFixed(1)}%</span>
+                                            <span>{((results[testCase.id]?.verificationMetrics?.verificationSpeed || 0) * 100).toFixed(1)}%</span>
                                           </div>
-                                          <Progress value={results[testCase.id].verificationMetrics.verificationSpeed * 100} className="h-1" />
+                                          <Progress value={(results[testCase.id]?.verificationMetrics?.verificationSpeed || 0) * 100} className="h-1" />
                                         </div>
                                       </div>
                                     </div>

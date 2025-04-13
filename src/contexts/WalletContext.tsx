@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
 import { ethers } from "ethers";
-import { formatEther } from "ethers/lib/utils";
 // Define a custom type for MetaMask provider
 interface Eip1193Provider {
   request: (args: { method: string; params?: any[] }) => Promise<any>;
@@ -172,7 +171,7 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
       console.log("[DEBUG] account", account);
       const balance = await sagaTokenContract.balanceOf(account);
       console.log(balance);
-      const formattedBalance = formatEther(balance);
+      const formattedBalance = ethers.utils.formatEther(balance);
       console.log("[DEBUG] formattedBalance", formattedBalance);
 
       // Update state
