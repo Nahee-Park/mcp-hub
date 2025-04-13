@@ -2,7 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import type { Eip1193Provider } from "ethers";
+import { formatEther, parseEther } from "ethers/lib/utils";
+// Define a custom type for MetaMask provider
+interface Eip1193Provider {
+  request: (args: { method: string; params?: any[] }) => Promise<any>;
+}
 import Link from "next/link";
 import { Header } from "@/components/header";
 import { Aside } from "@/components/aside";
@@ -137,12 +141,12 @@ export default function Home() {
           category: mcp.category,
           usageCount: mcp.usageCount.toNumber(),
           rating: mcp.rating,
-          price: parseFloat(ethers.formatEther(mcp.price)),
+          price: parseFloat(formatEther(mcp.price)),
           owner: mcp.owner,
           approved: mcp.approved,
           active: mcp.active,
           apiEndpoints: mcp.apiEndpoints || [],
-          revenue: parseFloat(ethers.formatEther(mcp.revenue)),
+          revenue: parseFloat(formatEther(mcp.revenue)),
           codeExamples: mcp.codeExamples,
         }));
 
@@ -217,7 +221,7 @@ export default function Home() {
       setSelectedMcp(mcp);
 
       // Process payment
-      const priceInWei = ethers.parseEther(mcp.price.toString());
+      const priceInWei = parseEther(mcp.price.toString());
       const tx = await billingSystem.processPayment(mcp.owner, priceInWei);
       await tx.wait();
 
@@ -243,7 +247,7 @@ export default function Home() {
       // Update token balance
       if (sagaToken && account) {
         const newBalance = await sagaToken.balanceOf(account);
-        setTokenBalance(ethers.formatEther(newBalance));
+        setTokenBalance(formatEther(newBalance));
       }
 
       toast({
